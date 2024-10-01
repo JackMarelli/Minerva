@@ -72,17 +72,26 @@ export default function Editor() {
   };
 
   const saveDocument = () => {
-    console.log("Document saved:", blocks);
+    // Remove blocks with no content
+    const nonEmptyBlocks = blocks.filter(
+      (block) => block.content.trim() !== ""
+    );
 
-    // Update localStorage with saved blocks
+    // Update localStorage with the filtered blocks
     const storedDocuments = JSON.parse(localStorage.getItem("documents")) || [];
     const updatedDocuments = storedDocuments.map((document) => {
       if (document.id === parseInt(id)) {
-        return { ...document, content: blocks };
+        return { ...document, content: nonEmptyBlocks };
       }
       return document;
     });
+
     localStorage.setItem("documents", JSON.stringify(updatedDocuments));
+
+    // Update the state with the non-empty blocks
+    setBlocks(nonEmptyBlocks);
+
+    console.log("Document saved:", nonEmptyBlocks);
   };
 
   const onSelectionUpdate = (editor) => {

@@ -1,7 +1,37 @@
 .tiptap p.is-editor-empty:first-child::before {
-    color: #adb5bd;
-    content: attr(data-placeholder);
-    float: left;
-    height: 0;
-    pointer-events: none;
-  }
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.active-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.BubbleMenu {
+  display: flex;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.BubbleMenu button {
+  background: none;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.BubbleMenu button:hover {
+  background-color: #f0f0f0;
+}
+
+.BubbleMenu button.active-btn {
+  background-color: #007bff;
+  color: #fff;
+}

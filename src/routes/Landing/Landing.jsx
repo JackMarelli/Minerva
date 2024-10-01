@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import BaseLayout from "../../layouts/BaseLayout/BaseLayout";
+import ListDocument from "../../components/ListDocument/ListDocument";
 
 export default function Landing() {
   const [documents, setDocuments] = useState([]);
@@ -15,9 +16,7 @@ export default function Landing() {
     const newDocument = {
       id: Date.now(), // Generate a unique ID based on current timestamp
       title: `New Document`, // Example title
-      content: [
-        { id: 0, content: "" }, // The first block gets an ID of block0
-      ],
+      content: [{ id: 0, content: "" }], // The first block gets an ID of block0
     };
 
     // Update the documents array
@@ -29,20 +28,46 @@ export default function Landing() {
     // Update the state to re-render the component
     setDocuments(updatedDocuments);
   };
+
+  const renameDocument = (id, newName) => {
+    const updatedDocuments = documents.map((doc) => {
+      if (doc.id === id) {
+        return { ...doc, title: newName };
+      }
+      return doc;
+    });
+    localStorage.setItem("documents", JSON.stringify(updatedDocuments));
+    setDocuments(updatedDocuments);
+  };
+
+  const duplicateDocument = (doc) => {
+    const duplicatedDoc = { ...doc, id: Date.now() }; // Clone and give a new ID
+    const updatedDocuments = [...documents, duplicatedDoc];
+    localStorage.setItem("documents", JSON.stringify(updatedDocuments));
+    setDocuments(updatedDocuments);
+  };
+
+  const deleteDocument = (id) => {
+    const updatedDocuments = documents.filter((doc) => doc.id !== id);
+    localStorage.setItem("documents", JSON.stringify(updatedDocuments));
+    setDocuments(updatedDocuments);
+  };
+
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-4xl font-bold font-mono mb-8">Documents</h1>
+    <BaseLayout>
+      <h1 className="col-span-full text-4xl font-bold font-mono mb-8">
+        Documents
+      </h1>
       {documents && documents.length !== 0 ? (
-        <ul className="space-y-4">
+        <ul className="col-span-full flex flex-col gap-4">
           {documents.map((doc) => (
-            <li key={doc.id} className="bg-white shadow-md p-4 rounded-md">
-              <Link
-                to={`/document/${doc.id}`}
-                className="text-blue-500 hover:underline"
-              >
-                {doc.title}
-              </Link>
-            </li>
+            <ListDocument
+              key={doc.id}
+              doc={doc}
+              onRename={renameDocument}
+              onDuplicate={duplicateDocument}
+              onDelete={deleteDocument}
+            />
           ))}
         </ul>
       ) : (
@@ -57,6 +82,6 @@ export default function Landing() {
           New Document
         </button>
       </div>
-    </div>
+    </BaseLayout>
   );
 }
