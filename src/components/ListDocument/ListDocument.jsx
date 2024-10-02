@@ -53,9 +53,9 @@ const ListDocument = ({ doc, onRename, onDuplicate, onDelete }) => {
   }, []);
 
   return (
-    <li className="w-full bg-white border border-black rounded-full flex justify-between items-center px-6 py-4">
-      <Link to={`/document/${doc.id}`} className="flex-grow h-full">
-        <span className="text-black hover:underline">{doc.title}</span>
+    <li className="w-full bg-white border-b border-slate-300 hover:bg-slate-100 flex justify-between items-center px-6">
+      <Link to={`/document/${doc.id}`} className="flex-grow py-3">
+        <span className="text-black font-semibold">{doc.title}</span>
       </Link>
       <div className="relative" ref={menuRef}>
         <button

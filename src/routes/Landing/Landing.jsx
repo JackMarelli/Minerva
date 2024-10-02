@@ -59,7 +59,7 @@ export default function Landing() {
         Documents
       </h1>
       {documents && documents.length !== 0 ? (
-        <ul className="col-span-full flex flex-col gap-4">
+        <ul className="col-span-full flex flex-col border-t border-slate-300">
           {documents.map((doc) => (
             <ListDocument
               key={doc.id}

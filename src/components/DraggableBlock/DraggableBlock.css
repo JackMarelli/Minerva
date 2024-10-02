@@ -6,6 +6,10 @@
   pointer-events: none;
 }
 
+.draggable-block {
+  transition: all 0.3s ease-in-out;
+}
+
 .active-btn {
   background-color: #007bff;
   color: white;
