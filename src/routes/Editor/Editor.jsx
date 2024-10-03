@@ -1,85 +1,77 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import BaseLayout from "../../layouts/BaseLayout/BaseLayout";
-import DraggableBlock from "../../components/DraggableBlock/DraggableBlock"; // Ensure you import the DraggableBlock
-import "./Editor.css"; // Optional for custom styling
+import { Reorder, useDragControls } from "framer-motion";
+import DraggableBlock from "../../components/DraggableBlock/DraggableBlock";
+import "./Editor.css";
 
 export default function Editor() {
   const { id } = useParams();
   const [doc, setDoc] = useState(null);
   const [blocks, setBlocks] = useState([]);
-  const [activeEditor, setActiveEditor] = useState(null); // Track active editor
+  const [activeEditor, setActiveEditor] = useState(null);
   const [isBoldActive, setIsBoldActive] = useState(false);
   const [isItalicActive, setIsItalicActive] = useState(false);
   const [isUnderlineActive, setIsUnderlineActive] = useState(false);
   const [isStrikeActive, setIsStrikeActive] = useState(false);
   const [fontFamily, setFontFamily] = useState("default");
   const [fontSize, setFontSize] = useState("default");
+  const controls = useDragControls();
 
   useEffect(() => {
-    // Load document from localStorage
     const storedDocuments = JSON.parse(localStorage.getItem("documents")) || [];
     const docData = storedDocuments.find((doc) => doc.id === parseInt(id));
     if (docData) {
       setDoc(docData);
-      setBlocks(docData.content); // Assuming content is an array of blocks
+      setBlocks(docData.content || []); // Ensure content is an array
     }
   }, [id]);
 
-  // Move block to rearrange them
-  const moveBlock = (fromIndex, toIndex) => {
-    const updatedBlocks = [...blocks];
-    const [movedBlock] = updatedBlocks.splice(fromIndex, 1);
-    updatedBlocks.splice(toIndex, 0, movedBlock);
-    setBlocks(updatedBlocks);
-  };
-
-  // Function to create a new block
   const addNewBlock = () => {
     const newBlock = {
-      id: `${blocks.length || 0}`, // Assign ID based on the current number of blocks
-      content: "",
+      id: `${blocks.length}`, // Ensure unique ID
+      content: "", // Empty content
+      fontFamily: fontFamily, // Current font family
+      fontSize: fontSize, // Current font size
     };
-    const updatedBlocks = [...blocks, newBlock]; // Add the new block to the existing blocks
+    const updatedBlocks = [...blocks, newBlock];
     setBlocks(updatedBlocks);
 
-    // Update localStorage
     const storedDocuments = JSON.parse(localStorage.getItem("documents")) || [];
     const updatedDocuments = storedDocuments.map((document) => {
       if (document.id === parseInt(id)) {
-        return { ...document, content: updatedBlocks }; // Update the current document
+        return { ...document, content: updatedBlocks };
       }
       return document;
     });
     localStorage.setItem("documents", JSON.stringify(updatedDocuments));
   };
 
-  // Function to update block content
   const updateBlockContent = (index, newContent) => {
     const updatedBlocks = [...blocks];
-    updatedBlocks[index].content = newContent; // Update the specific block's content
-    setBlocks(updatedBlocks);
+    if (updatedBlocks[index]) {
+      // Check if the index is valid
+      updatedBlocks[index].content = newContent;
+      setBlocks(updatedBlocks);
 
-    // Update localStorage
-    const storedDocuments = JSON.parse(localStorage.getItem("documents")) || [];
-    const updatedDocuments = storedDocuments.map((document) => {
-      if (document.id === parseInt(id)) {
-        return { ...document, content: updatedBlocks }; // Update the current document
-      }
-      return document;
-    });
-    localStorage.setItem("documents", JSON.stringify(updatedDocuments));
+      const storedDocuments =
+        JSON.parse(localStorage.getItem("documents")) || [];
+      const updatedDocuments = storedDocuments.map((document) => {
+        if (document.id === parseInt(id)) {
+          return { ...document, content: updatedBlocks };
+        }
+        return document;
+      });
+      localStorage.setItem("documents", JSON.stringify(updatedDocuments));
+    } else {
+      console.error(`Block at index ${index} does not exist.`);
+    }
   };
 
   const saveDocument = () => {
-    // Remove blocks with no content
     const nonEmptyBlocks = blocks.filter(
       (block) => block.content.trim() !== ""
     );
-
-    // Update localStorage with the filtered blocks
     const storedDocuments = JSON.parse(localStorage.getItem("documents")) || [];
     const updatedDocuments = storedDocuments.map((document) => {
       if (document.id === parseInt(id)) {
@@ -89,10 +81,7 @@ export default function Editor() {
     });
 
     localStorage.setItem("documents", JSON.stringify(updatedDocuments));
-
-    // Update the state with the non-empty blocks
     setBlocks(nonEmptyBlocks);
-
     console.log("Document saved:", nonEmptyBlocks);
   };
 
@@ -123,7 +112,7 @@ export default function Editor() {
           onClick={() => {
             if (activeEditor) {
               activeEditor.chain().focus().toggleBold().run();
-              setIsBoldActive(activeEditor.isActive("bold")); // Update state immediately
+              setIsBoldActive(activeEditor.isActive("bold"));
             }
           }}
           className={`px-2 py-1 rounded ${
@@ -136,7 +125,7 @@ export default function Editor() {
           onClick={() => {
             if (activeEditor) {
               activeEditor.chain().focus().toggleItalic().run();
-              setIsItalicActive(activeEditor.isActive("italic")); // Update state immediately
+              setIsItalicActive(activeEditor.isActive("italic"));
             }
           }}
           className={`px-2 py-1 rounded ${
@@ -149,7 +138,7 @@ export default function Editor() {
           onClick={() => {
             if (activeEditor) {
               activeEditor.chain().focus().toggleUnderline().run();
-              setIsUnderlineActive(activeEditor.isActive("underline")); // Update state immediately
+              setIsUnderlineActive(activeEditor.isActive("underline"));
             }
           }}
           className={`px-2 py-1 rounded ${
@@ -162,7 +151,7 @@ export default function Editor() {
           onClick={() => {
             if (activeEditor) {
               activeEditor.chain().focus().toggleStrike().run();
-              setIsStrikeActive(activeEditor.isActive("strike")); // Update state immediately
+              setIsStrikeActive(activeEditor.isActive("strike"));
             }
           }}
           className={`px-2 py-1 rounded ${
@@ -177,7 +166,7 @@ export default function Editor() {
           onChange={(e) => {
             if (activeEditor) {
               activeEditor.chain().focus().setFontFamily(e.target.value).run();
-              setFontFamily(e.target.value); // Update state immediately
+              setFontFamily(e.target.value);
             }
           }}
           value={fontFamily}
@@ -195,7 +184,7 @@ export default function Editor() {
           onChange={(e) => {
             if (activeEditor) {
               activeEditor.chain().focus().setFontSize(e.target.value).run();
-              setFontSize(e.target.value); // Update state immediately
+              setFontSize(e.target.value);
             }
           }}
           value={fontSize}
@@ -211,26 +200,31 @@ export default function Editor() {
       </div>
 
       <div className="col-span-full h-fit">
-        <DndProvider backend={HTML5Backend}>
-          <div className="flex flex-col gap-4">
-            {blocks.map((block, index) => (
-              <DraggableBlock
-                key={block.id}
-                id={block.id}
-                index={index}
-                moveBlock={moveBlock}
-                content={block.content}
-                setActiveEditor={setActiveEditor}
-                onSelectionUpdate={onSelectionUpdate} // Pass the update function
-                updateBlockContent={updateBlockContent} // Pass the update function
-              />
-            ))}
-          </div>
-        </DndProvider>
+        <Reorder.Group
+          values={blocks}
+          onReorder={setBlocks}
+          className="flex flex-col gap-4"
+        >
+          {blocks.map(
+            (
+              block,
+              index // Pass index to DraggableBlock
+            ) => (
+              
+                <DraggableBlock
+                  block={block}
+                  index={index} // Pass the current index
+                  setActiveEditor={setActiveEditor}
+                  onSelectionUpdate={onSelectionUpdate}
+                  updateBlockContent={updateBlockContent}
+                  onPointerDown={(e) => controls.start(e)}
+                />
+            )
+          )}
+        </Reorder.Group>
       </div>
 
       <div className="col-span-full flex flex-row gap-2">
-        {/* Button to add a new block */}
         <button
           className="w-48 h-12 rounded-full bg-white border border-black p-4 flex items-center justify-center"
           onClick={addNewBlock}
