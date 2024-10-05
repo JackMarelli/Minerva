@@ -5,14 +5,14 @@
 @font-face {
   font-family: "Inter";
   font-style: normal;
-  font-weight: 400;
+  font-weight: 600;
   src: url("/public/assets/fonts/Inter-VariableFont_opsz\,wght.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "Inter Italic";
   font-style: normal;
-  font-weight: 400;
+  font-weight: 500;
   src: url("/public/assets/fonts/Inter-Italic-VariableFont_opsz\,wght.ttf")
     format("truetype");
 }

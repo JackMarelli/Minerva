@@ -16,7 +16,7 @@ import { useRef, useEffect } from "react";
 function DraggableBlock({
   index,
   block,
-  onPointerDown,
+  type,
   setActiveEditor,
   onSelectionUpdate,
   updateBlockContent,
@@ -42,7 +42,7 @@ function DraggableBlock({
         placeholder: "Write something...",
       }),
     ],
-    content: block.content || "<p></p>", // Default content to prevent undefined issues
+    content: block.content || "<p className=''></p>", // Default content to prevent undefined issues
     onUpdate: ({ editor }) => {
       if (updateBlockContent && typeof updateBlockContent === "function") {
         // Ensure updateBlockContent is a function
