@@ -81,16 +81,15 @@ function DraggableBlock({
     >
       <div
         ref={ref}
-        className="draggable-block flex items-center space-x-4 h-fit rounded-xl border border-gray-300 px-5 py-3 transition-all duration-300 ease-in-out"
+        className="relative draggable-block flex items-center h-fit transition-all duration-300 ease-in-out border border-green-700"
       >
         {/* Drag Handle */}
         <div
-          className="cursor-move w-6 h-6 bg-gray-200 flex items-center justify-center"
-          style={{ minWidth: "24px" }}
+          className="absolute top-0 -left-8 cursor-move w-fit h-fit flex items-center justify-start px-3 pt-1 handle border border-red-700"
           title="Drag block"
           onPointerDown={(event) => controls.start(event)}
         >
-          •
+          <img src="/assets/images/svg/drag-handle.svg" alt="" />{" "}
         </div>
 
         {/* Block Content */}
@@ -99,7 +98,7 @@ function DraggableBlock({
           {editor && (
             <BubbleMenu
               editor={editor}
-              className="bg-white shadow-md border rounded p-2 flex space-x-2"
+              className="bg-white shadow-md border rounded p-2 flex"
             >
               <button onClick={() => editor.chain().focus().toggleBold().run()}>
                 Bold

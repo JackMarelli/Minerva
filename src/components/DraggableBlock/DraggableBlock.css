@@ -10,6 +10,14 @@
   transition: all 0.3s ease-in-out;
 }
 
+.draggable-block > .handle {
+  display: none;
+}
+
+.draggable-block:hover > .handle {
+  display: block;
+}
+
 .active-btn {
   background-color: #007bff;
   color: white;

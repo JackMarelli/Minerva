@@ -104,13 +104,9 @@ export default function Editor() {
 
   return (
     <BaseLayout>
-      <EditorLayout>
-        <h1 className="col-span-full text-3xl font-bold font-mono">
-          {doc.title}
-        </h1>
-
+      <EditorLayout title={doc.title}>
         {/* Global Toolbar */}
-        <div className="flex flex-row gap-2 w-fit h-fit rounded border border-black p-2">
+        <div className="col-span-full flex flex-row gap-2 h-fit rounded border border-black p-2">
           <button
             onClick={() => {
               if (activeEditor) {

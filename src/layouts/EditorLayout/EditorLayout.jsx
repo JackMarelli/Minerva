@@ -1,3 +1,11 @@
-export default function BaseLayout({children}) {
-    return(<div className="w-full max-w-[760px] h-fit min-h-screen grid grid-cols-12 gap-6 mx-auto my-24">{children}</div>)
+export default function EditorLayout({ children, title }) {
+  return (
+    <div className="w-full h-fit max-w-[760px] grid grid-cols-12 mx-auto my-32 gap-12">
+      <h1 className="col-span-full h-fit text-4xl font-bold font-mono">
+        {title}
+      </h1>
+      <hr className="col-span-full bg-slate-300" />
+      {children}
+    </div>
+  );
 }
