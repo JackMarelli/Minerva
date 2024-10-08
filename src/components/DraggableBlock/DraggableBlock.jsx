@@ -16,7 +16,7 @@ import { useRef, useEffect } from "react";
 function DraggableBlock({
   index,
   block,
-  type,
+  type="text",
   setActiveEditor,
   onSelectionUpdate,
   updateBlockContent,
@@ -59,7 +59,7 @@ function DraggableBlock({
       setActiveEditor(editor); // Set active editor on focus
     },
   });
-
+  /* 
   // Apply default font family and size on first render
   useEffect(() => {
     if (editor && editor.isEmpty) {
@@ -71,7 +71,7 @@ function DraggableBlock({
         .run();
     }
   }, [editor, block.fontFamily, block.fontSize]);
-
+ */
   return (
     <Reorder.Item
       key={block.id}
@@ -108,37 +108,6 @@ function DraggableBlock({
               >
                 Italic
               </button>
-
-              {/* Font Family Dropdown */}
-              <select
-                onChange={(e) =>
-                  editor.chain().focus().setFontFamily(e.target.value).run()
-                }
-                value={
-                  editor.getAttributes("textStyle").fontFamily || "default"
-                }
-              >
-                <option value="default">Default</option>
-                <option value="Arial">Arial</option>
-                <option value="Courier New">Courier New</option>
-                <option value="Georgia">Georgia</option>
-                <option value="Times New Roman">Times New Roman</option>
-              </select>
-
-              {/* Font Size Dropdown */}
-              <select
-                onChange={(e) =>
-                  editor.chain().focus().setFontSize(e.target.value).run()
-                }
-                value={editor.getAttributes("textStyle").fontSize || "14px"}
-              >
-                <option value="default">Default</option>
-                <option value="12px">12px</option>
-                <option value="14px">14px</option>
-                <option value="16px">16px</option>
-                <option value="20px">20px</option>
-                <option value="24px">24px</option>
-              </select>
             </BubbleMenu>
           )}
           <EditorContent editor={editor} />

@@ -33,8 +33,8 @@ export default function Editor() {
     const newBlock = {
       id: `${blocks.length}-${Date.now()}`, // Ensure unique ID
       content: "", // Empty content
-      fontFamily: fontFamily, // Current font family
-      fontSize: fontSize, // Current font size
+      fontFamily: fontFamily,
+      fontSize: fontSize,
     };
     const updatedBlocks = [...blocks, newBlock];
     setBlocks(updatedBlocks);
@@ -159,47 +159,6 @@ export default function Editor() {
           >
             Strike
           </button>
-
-          {/* Font Family Dropdown */}
-          <select
-            onChange={(e) => {
-              if (activeEditor) {
-                activeEditor
-                  .chain()
-                  .focus()
-                  .setFontFamily(e.target.value)
-                  .run();
-                setFontFamily(e.target.value);
-              }
-            }}
-            value={fontFamily}
-            className="px-2 py-1 border rounded"
-          >
-            <option value="default">Font Family</option>
-            <option value="Arial">Arial</option>
-            <option value="Courier New">Courier New</option>
-            <option value="Georgia">Georgia</option>
-            <option value="Times New Roman">Times New Roman</option>
-          </select>
-
-          {/* Font Size Dropdown */}
-          <select
-            onChange={(e) => {
-              if (activeEditor) {
-                activeEditor.chain().focus().setFontSize(e.target.value).run();
-                setFontSize(e.target.value);
-              }
-            }}
-            value={fontSize}
-            className="px-2 py-1 border rounded"
-          >
-            <option value="default">Font Size</option>
-            <option value="12px">12px</option>
-            <option value="14px">14px</option>
-            <option value="16px">16px</option>
-            <option value="20px">20px</option>
-            <option value="24px">24px</option>
-          </select>
         </div>
 
         <div className="col-span-full h-fit">
