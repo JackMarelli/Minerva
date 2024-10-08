@@ -110,6 +110,7 @@ export default function Editor() {
           <button
             onClick={() => {
               if (activeEditor) {
+                
                 activeEditor.chain().focus().toggleBold().run();
                 setIsBoldActive(activeEditor.isActive("bold"));
               }
