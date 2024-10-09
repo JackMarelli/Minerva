@@ -10,13 +10,11 @@ import FontSize from "tiptap-extension-font-size";
 import Placeholder from "@tiptap/extension-placeholder";
 import { Reorder, useDragControls } from "framer-motion";
 import "./DraggableBlock.css";
-
 import { useRef, useEffect } from "react";
 
 function DraggableBlock({
   index,
   block,
-  type="text",
   setActiveEditor,
   onSelectionUpdate,
   updateBlockContent,
@@ -31,89 +29,44 @@ function DraggableBlock({
       Italic,
       Underline,
       Strike,
-      TextStyle, // Needed for custom font size and family
-      FontFamily.configure({
-        types: ["textStyle"],
-      }),
       FontSize.configure({
-        types: ["textStyle"],
+        types: ['textStyle'],
       }),
+      FontFamily.configure({
+        types: ['textStyle'],
+      }),
+      TextStyle,
       Placeholder.configure({
-        placeholder: "Write something...",
+        placeholder: "Start typing...",
       }),
     ],
-    content: block.content || "<p className=''></p>", // Default content to prevent undefined issues
+    content: block.content,
     onUpdate: ({ editor }) => {
-      if (updateBlockContent && typeof updateBlockContent === "function") {
-        // Ensure updateBlockContent is a function
-        updateBlockContent(index, editor.getHTML()); // Update block content
-        setActiveEditor(editor); // Set active editor
-      } else {
-        console.error("updateBlockContent is not a function or is undefined");
-      }
-    },
-    onSelectionUpdate: () => {
-      onSelectionUpdate(editor); // Handle selection update
+      updateBlockContent(index, editor.getHTML());
     },
     onFocus: () => {
-      setActiveEditor(editor); // Set active editor on focus
+      setActiveEditor(editor);
     },
   });
-  /* 
-  // Apply default font family and size on first render
+
   useEffect(() => {
-    if (editor && editor.isEmpty) {
-      editor
-        .chain()
-        .focus()
-        .setFontFamily(block.fontFamily || "default")
-        .setFontSize(block.fontSize || "14px")
-        .run();
+    if (editor) {
+      editor.commands.setFontFamily(block.fontFamily || "default");
+      editor.commands.setFontSize(block.fontSize || "14px");
     }
   }, [editor, block.fontFamily, block.fontSize]);
- */
-  return (
-    <Reorder.Item
-      key={block.id}
-      value={block}
-      dragListener={false}
-      dragControls={controls}
-    >
-      <div
-        ref={ref}
-        className="relative draggable-block flex items-center h-fit transition-all duration-300 ease-in-out border border-green-700"
-      >
-        {/* Drag Handle */}
-        <div
-          className="absolute top-0 -left-8 cursor-move w-fit h-fit flex items-center justify-start px-3 pt-1 handle border border-red-700"
-          title="Drag block"
-          onPointerDown={(event) => controls.start(event)}
-        >
-          <img src="/assets/images/svg/drag-handle.svg" alt="" />{" "}
-        </div>
 
-        {/* Block Content */}
-        <div className="flex-1">
-          {/* Bubble Menu */}
-          {editor && (
-            <BubbleMenu
-              editor={editor}
-              className="bg-white shadow-md border rounded p-2 flex"
-            >
-              <button onClick={() => editor.chain().focus().toggleBold().run()}>
-                Bold
-              </button>
-              <button
-                onClick={() => editor.chain().focus().toggleItalic().run()}
-              >
-                Italic
-              </button>
-            </BubbleMenu>
-          )}
-          <EditorContent editor={editor} />
-        </div>
-      </div>
-    </Reorder.Item>
+  return (
+    <div ref={ref} className="draggable-block" onPointerDown={(e) => controls.start(e)}>
+      <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }}>
+        <button onClick={() => editor.chain().focus().toggleBold().run()} className="bubble-button">B</button>
+        <button onClick={() => editor.chain().focus().toggleItalic().run()} className="bubble-button">I</button>
+        <button onClick={() => editor.chain().focus().toggleUnderline().run()} className="bubble-button">U</button>
+        <button onClick={() => editor.chain().focus().toggleStrike().run()} className="bubble-button">S</button>
+      </BubbleMenu>
+
+      <EditorContent editor={editor} />
+    </div>
   );
 }
 
